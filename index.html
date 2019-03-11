@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>抽屉</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        :root{
+            --height: 300;
+            --width: 200;
+            --depth: 150;
+            --drawerSize: calc((var(--height) / 3) - 10);
+            --drawerHole: calc((var(--height) - ((10 * 4) + (10 _ 30))) / 3);
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f9bf3b;
+            min-height: 100vh;
+        }
+        .chest{
+            height: calc(var(--height) * 1px );
+            transform: rotateX(-30deg) rotateY(40deg);
+            transform-style: preserve-3d;
+            width: calc(var(--width) * 1px);
+        }
+        .part{
+            height: 100%;
+            width: 100%;
+            transform-style: preserve-3d;
+            position: absolute;
+            background: white;
+        }
+        .part::after{
+            content: "";
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+        .front{
+            transform: translate3d(0, 0, calc(var(--depth) / 2 * 1px));
+        }
+        .front::after{
+            content: "";
+            background: #666;
+            height: 4px;
+            position: absolute;
+            width: 100%;
+            top: -2px;
+        }
+        .frame{
+            border: 10px solid #666;
+            border-bottom-width: 30px;
+            border-top-width: 10px;
+            transform: translate3d(0, 0, 0);
+        }
+        .frame::before{
+            content: "";
+            background: #666;
+            height: 20px;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: calc(var(--drawerHole) * 1px);
+
+        }
+        .frame::after{
+            content: "";
+            background: #666;
+            height: 20px;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: calc(var(--drawerHole) * 2px + 8px);
+        }
+
+        .back{
+            background: #666;
+            transform: translate3d(0, 0, calc(var(--depth) / 2 * -1px));
+        }
+        .back::after{
+            content: "";
+            background: #000;
+            transform: translate3d(0, 0, 1px);
+        }
+        .top{
+            background: #474747;
+            bottom: 100%;
+            height: calc(var(--depth) * 1px);
+            left: 0;
+            transform: rotateX(90deg) translate3d(0, 50%, 1px);
+            transform-origin: bottom;
+            transform-style: preserve-3d;
+        }
+        .top::after{
+            background: #1a1a1a;
+            transform: translate3d(0, 0, -1px);
+        }
+        .bottom{
+            background: #474747;
+            height: calc(var(--depth) * 1px);
+            left: 0;
+            top: 100%;
+            transform: translateY(-50%) rotateX(90deg);
+        }
+        .bottom::after{
+            background: #0d0d0d;
+            transform: translate3d(0, 0, 1px);
+        }
+        .right{
+            background: #323232;
+            right: 0;
+            transform: translate3d(0, 0, calc(var(--depth) / 2 * 1px)) rotateY(-90deg);
+            transform-origin: right center;
+            width: calc(var(--depth) * 1px);
+        }
+        .right::after{
+            background: #1a1a1a;
+            transform: translate3d(0, 0, 1px);
+        }
+        .left{
+            background: #323232;
+            left: 0;
+            transform: translate3d(0, -1px, calc(var(--depth) / 2 * 1px)) rotateY(90deg);
+            transform-origin: left center;
+            width: calc(var(--depth) * 1px);
+           
+        }
+        .left::after{
+            background: #1a1a1a;
+            transform: translate3d(0, 0, 1px);
+        }
+        
+        .drawer{
+            height: calc(var(--drawerSize) * 1px);
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: 0.25s;
+            transform-style: preserve-3d;
+            width: 100%;
+        }
+
+        .drawer-top,
+        .drawer-middle,
+        .drawer-bottom{
+            transform: translate3d(0, 0, calc(var(--depth) * 0.51px));
+        }
+        .drawer-top{
+            top: 5px;
+            z-index: 3;
+        }
+        .drawer-middle{
+            top: calc((var(--drawerSize) + 10) * 1px);
+            z-index: 2;
+        }
+        .drawer-bottom{
+            top: calc((var(--drawerSize) * 2 + 15) * 1px);
+            z-index: 1;
+        }
+        
+        .drawer details,
+        .drawer summary{
+            background: #303030;
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: 0.25s;
+            transform: translate3d(0, 0, 0);
+            list-style: none;
+            outline: 0;
+        }
+        
+        .drawer details::after,
+        .drawer summary::after{
+            background: #adadad;
+            content: '';
+            height: 5%;
+            position: absolute;
+            left: 50%;
+            top: 10%;
+            transform: translate(-50%, 0);
+            width: 40%;
+        }
+        .drawer details::-webkit-details-marker,
+        .drawer summary::-webkit-details-marker{
+            display: none;
+        }
+
+        .drawer details:hover:not([open]){
+            transform: translate3d(0, 0, calc(var(--depth) * 0.05px));
+        }
+        .drawer details[open],
+        .drawer details[open] ~ .struct{
+            transform: translate3d(0, 0, calc(var(--depth) * 0.9px));
+        }
+        
+
+        .struct{
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform-style: preserve-3d;
+            transition: 0.25s;
+
+        }
+        .struct-detail{
+            height: 100%;
+            width: 100%;
+            transform-style: preserve-3d;
+            position: absolute;
+        }
+        .struct-left{
+            background: #e6e6e6;
+            bottom: 0;
+            height: calc(var(--drawerHole) * 0.65px);
+            left: 10px;
+            transform-origin: left;
+            transform: translate3d(0, -16px, -2px) rotateY(90deg);
+            width: calc(var(--depth) * 1px);
+        }
+        .struct-right{
+            background: #e6e6e6;
+            bottom: 0;
+            height: calc(var(--drawerHole) * 0.65px);
+            right: 10px;
+            transform-origin: right;
+            transform: translate3d(0, -16px, -2px) rotateY(-90deg);
+            width: calc((var(--depth) - 3) * 1px);
+        }
+        .struct-bottom{
+            background: #fff;
+            bottom: 18px;
+            height: calc(var(--depth) * 1px);
+            width: calc(100% - (2px * 10));
+            left: 10px;
+            transform: rotateX(90deg) translate3d(0, -2px, 0);
+            transform-origin: bottom center;
+        }
+        .struct-back{
+            background: #d9d9d9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Arial", sans-serif;
+            font-size: calc(var(--drawerHole) * 0.35px);
+            font-weight: bold;
+            height: calc(var(--drawerHole) * 0.65px);
+            left: 10px;
+            width: calc(100% - (2px * 10));
+            transform: translate3d(0, 0, calc((var(--depth) - 2) * -1px));
+        }
+
+
+        .drawer-top .struct-detail{
+            
+        }
+        .drawer-middle .struct-detail{
+
+        }
+        .drawer-bottom .struct-detail{
+
+        }
+
+    </style>
+</head>
+<body>
+    <div class="chest">
+        <div class="part back"></div>
+        <div class="part front">
+            <div class="part frame"></div>
+        </div>
+        <div class="part top"></div>
+        <div class="part bottom"></div>
+        <div class="part left"></div>
+        <div class="part right"></div>
+        <div class="drawer drawer-top">
+            <details>
+                <summary></summary>
+            </details>
+            <div class="struct">
+                <div class="struct-detail struct-left"></div>
+                <div class="struct-detail struct-right"></div>
+                <div class="struct-detail struct-bottom"></div>
+                <div class="struct-detail struct-back"></div>
+            </div>
+        </div>
+        <div class="drawer drawer-middle">
+            <details>
+                <summary></summary>
+            </details>
+            <div class="struct">
+                <div class="struct-detail struct-left"></div>
+                <div class="struct-detail struct-right"></div>
+                <div class="struct-detail struct-bottom"></div>
+                <div class="struct-detail struct-back"></div>
+            </div>
+        </div>
+        <div class="drawer drawer-bottom">
+            <details>
+                <summary></summary>
+            </details>
+            <div class="struct">
+                <div class="struct-detail struct-left"></div>
+                <div class="struct-detail struct-right"></div>
+                <div class="struct-detail struct-bottom"></div>
+                <div class="struct-detail struct-back"></div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
